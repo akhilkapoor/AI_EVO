@@ -13,7 +13,7 @@ class Player(object):
     ypos = -1
 
 
-    def __init__(selfparams):
+    def __init__(self,params):
         '''
         Constructor
         '''

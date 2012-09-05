@@ -12,10 +12,11 @@ class Evolution(object):
     ngenerations = 100
     nodes_per_population = 100
 
-    def __init__(selfparams):
+    def __init__(self,params):
         '''
         Constructor
         '''
+        pass
         
     def run(self):
-        
+        pass

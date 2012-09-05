@@ -9,10 +9,10 @@ class TronEvo(object):
     classdocs
     '''
 
-
-    def __init__(selfparams):
+    def __init__(self,params):
         '''
         Constructor
         '''
         
-    
+    def run(self):
+        ''
