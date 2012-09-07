@@ -14,9 +14,9 @@ class Evolution(object):
     classdocs
     '''
 
-    ngenerations = 3
-    population_size = 10
-    tournament_size = 2
+    ngenerations = 50
+    population_size = 20
+    tournament_size = 3
     population = []
     board_size = 20
     statistics = []
@@ -63,8 +63,8 @@ class Evolution(object):
             children = self.reproduce(parents)
             self.population = self.mutate(children)
             
-        # set statistics to be analyzed later
-        self.statistics.append([minCrashWeights, maxCrashWeights, meanCrashWeights])
+            # set statistics to be analyzed later
+            self.statistics.append([minCrashWeights, maxCrashWeights, meanCrashWeights])
 
     def init_population(self):
         while(len(self.population) < self.population_size):
@@ -154,7 +154,7 @@ class Evolution(object):
         
         for i in range(n_to_mutate):
             for weight in mutant_children[i].heuristic.weights:
-                weight *= random.random()
+                weight *= random.random() * self.mutation_factor
         
         return children
     
