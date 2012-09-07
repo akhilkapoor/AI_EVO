@@ -1,7 +1,7 @@
 '''
 @author: Akhil Kapoor, Michael Smith
 '''
-
+    
 #import random
 from Player import Player
 
@@ -22,6 +22,11 @@ class Game(object):
         self.size = n
         for i in range(n):
             self.board.append([0]*n)
+        for i in range(n):
+            self.board[0][i] = 1
+            self.board[n-1][i] = 1
+            self.board[i][0] = 1
+            self.board[i][n-1] = 1
 
     # Any collision - head-on, next-move, tail, wall
     def is_equal(self, board1, board2):
@@ -35,13 +40,14 @@ class Game(object):
             for j in range(self.size):
                 print board[i][j],
             print
-
+        print
+        print
     def play(self):
 
         while (not self.game):
-            #p1 turn
-            move1 = self.p1.pick_move(board, p2.pos)
-            move2 = self.p2.pick_move(board, p1.pos)
+
+            move1 = self.p1.pick_move(board, self.p2.pos)
+            move2 = self.p2.pick_move(board, self.p1.pos)
             temp1 = self.p1.apply_move(move1, board)
             temp2 = self.p2.apply_move(move2, board)
             final = self.p2.apply_move(move2, temp1)
@@ -66,7 +72,7 @@ class Game(object):
             board = final
             
         # just staying here but never executes.
-        return self.game    #random.choice([self.player1, self.player2, None])
+        return random.choice([self.player1, self.player2, None])
 
 def test():
     p1 = Player([1,1])
