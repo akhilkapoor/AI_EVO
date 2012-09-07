@@ -22,7 +22,7 @@ class TronEvo(object):
         self.run_statistics(tronEvo)
 
     def run_evolution(self):
-        tronEvo = Evolution(None)
+        tronEvo = Evolution()
         tronEvo.run()
         return tronEvo
 
@@ -55,3 +55,6 @@ class TronEvo(object):
             plt.legend()
             plt.title('Final weight value of ' + str(stats[i][-1]))
             plt.show()
+
+tron = TronEvo()
+tron.run()
