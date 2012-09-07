@@ -4,8 +4,8 @@
 
 import random
 import Game
-from ai_evo import Player
-from ai_evo.Heuristic import Heuristic
+from Player import Player
+from Heuristic import Heuristic
 
 class Evolution(object):
     '''
