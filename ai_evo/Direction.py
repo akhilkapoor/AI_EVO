@@ -12,14 +12,15 @@ class Direction(object):
     West = [-1,0]
     all = [North,East,South,West]
 
-    def __init__(self,params):
+    def __init__(self):
         '''
         Constructor
         '''
-        all = deepcopy(all)
+        self.all = deepcopy(self.all)
         
     def get_others(self, direction):
         pass
+
         
     def __str__(self, direction):
         if direction == self.North:
