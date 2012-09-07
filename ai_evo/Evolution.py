@@ -16,6 +16,7 @@ class Evolution(object):
     population_size = 100
     tournament_size = 5
     population = None
+    board_size = 400
 
     def __init__(self,params):
         '''
@@ -57,7 +58,7 @@ class Evolution(object):
                     competitors.append(p)
                     
             win_counts = [(0) for q in pop_range]   # list of all 0s
-                    
+            
             # have each player play other players once
             for p1 in pop_range:
                 for p2 in pop_range:
@@ -68,7 +69,7 @@ class Evolution(object):
                     # verify AI doesn't play itself
                     if player1 != player2:
                         # player j plays player k
-                        g = Game(player1, player2)
+                        g = Game(player1, player2, self.board_size)
                         winner = g.play()
                         
                         # only increment counts if true winner (no draws)
