@@ -6,6 +6,7 @@ import random
 import Game
 from Player import Player
 from Heuristic import Heuristic
+from copy import deepcopy
 
 class Evolution(object):
     '''
@@ -18,6 +19,13 @@ class Evolution(object):
     population = None
     board_size = 400
     statistics = []
+    
+    # reproduction params
+    perecent_maintain = 0.2    # number parents to keep
+    
+    # mutation params
+    percent_mutation = 0.1     # number children to mutate
+    mutation_factor = 5        # max factor to mutate weights by 
 
     def __init__(self):
         '''
@@ -114,14 +122,34 @@ class Evolution(object):
     def reproduce(self, parents):
         children = []
         
-        # do some sort of crossover
+        n_to_maintain = self.perecent_maintain * self.population_size
+        
+        children = random.sample(parents, n_to_maintain)
+        
+        # crossing over on two random parents' weights
+        while(len(children) < self.population_size):
+            
+            par1 = random.choice(parents)
+            par2 = random.choice(parents)
+            
+            child = deepcopy(par1)
+            weights = child.heuristic.weights
+            
+            for i in range(len(weights)):
+                weights[i] = (par1.heuristic.weights[i] + par2.heuristic.weights[i]) / 2
+
+            children.append(child)
         
         return children
     
     def mutate(self, children):
-        mutations = []
         
-        # do some form of mutation
+        n_to_mutate = self.percent_mutation * self.population_size
+        mutant_children = random.sample(children, n_to_mutate)
         
-        return mutations
+        for i in range(n_to_mutate):
+            for weight in mutant_children[i].heuristic.weights:
+                weight *= random.random()
+        
+        return children
     
