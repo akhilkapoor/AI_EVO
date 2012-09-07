@@ -1,3 +1,7 @@
+'''
+@author: Akhil Kapoor, Michael Smith
+'''
+
 from copy import deepcopy
 from Direction import Direction
 
@@ -20,30 +24,33 @@ class Player(object):
     heuristic = None
     moves_made = []
 
-    def __init__(self, pos):
-        #self.name = name
-        self.position = pos[:]
+    def __init__(self):
         self.direction = Direction()
+        #prev_pos = [0,0]
+        
 
     def applicable_moves(self, board):
         moves = direction.get_others()
         return moves
     
     def apply_move(self, move, old_board):
-        self.position[0] += move[0]
-        self.position[1] += move[1]
+        posx = self.position[0] + move[0]
+        posy = self.position[1] + move[1]
         new_board = deepcopy(old_board)
-        new_board[self.pos[0]][self.pos[1]] = self.color
+        new_board[posx][posy] = 1
         return new_board
 
-    def describe_move(move):
+    def pick_move(self, board, op_pos):
+        moves = self.applicable_moves(board)
+        scores = []
+        for m in moves:
+            new_board = apply_move(m, board)
+            score.append(self.heuristic.eval(board, new_board, self.pos, op_pos))
+        best_move = moves[ scores.index( max(scores) ) ]
+        return best_move
+
+    def describe_move(self, move):
         print move
-
-    def apply_heuristic(self, board):
-        return self.heuristic(board)
-
-    def set_heuristic(self, H):
-        self.heuristic = H
 
     def user_move(self):
         # input from somewhere
