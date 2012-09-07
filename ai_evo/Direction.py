@@ -5,10 +5,10 @@
 from copy import deepcopy
 
 class Direction(object):
-    North = [0,-1]
-    East = [1,0]
-    South = [0,1]
-    West = [-1,0]
+    North = [-1,0]
+    East = [0,1]
+    South = [1,0]
+    West = [0,-1]
     all = [North,East,South,West]
 
     def __init__(self):
@@ -21,6 +21,10 @@ class Direction(object):
         others = deepcopy(self.all)
         others.remove(direction)
         return others
+
+    def opposite_direction(self, old_d):
+        new_d = [old_d[0]*-1, old_d[1]*-1]
+        return new_d        
         
     def __str__(self, direction):
         if direction == self.North:
