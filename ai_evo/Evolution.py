@@ -4,8 +4,8 @@
 
 import random
 import Game
-from ai_evo import Player
-from ai_evo.Heuristic import Heuristic
+from Player import Player
+from Heuristic import Heuristic
 
 class Evolution(object):
     '''
@@ -17,6 +17,7 @@ class Evolution(object):
     tournament_size = 5
     population = None
     board_size = 400
+    statistics = []
 
     def __init__(self,params):
         '''
@@ -29,22 +30,41 @@ class Evolution(object):
         # initialize population
         self.population = self.init_population()
         
+        minWinWeights = []        
+        maxWinWeights = []
+        meanWinWeights = [] 
+        
         # run for several generations
         for i in range(self.ngenerations):
+            
+            winWeights = []
+            lossWeights = []    # not used yet
+            regionWeights = []  # not used yet
+            
+            for j in range(self.population_size):
+                weights = self.population[j]
+                
+                winWeights.append(weights[0])
+                lossWeights.append(weights[1])      # not used yet
+                regionWeights.append(weights[2])    # not used yet
+                
+            minWinWeights.append(min(winWeights))
+            maxWinWeights.append(max(winWeights))
+            meanWinWeights.append(sum(winWeights)/float(self.population_size))            
             
             parents = self.parent_selection()
             children = self.reproduce(parents)
             self.population = self.mutatate(children)
             
-        pass
-    
+        # set statistics to be analyzed later
+        self.statistics.append([minWinWeights, maxWinWeights, meanWinWeights])
+
     def init_population(self):
         while(len(self.population) < self.population_size):
             p = Player()
             p.heuristic = Heuristic()
             p.heuristic.weights = [random.randint(-100,100) for i in range(4)]
             self.population.append(p)
-        pass
     
     def parent_selection(self):
         # only 'most fit' players are selected for reproduction
