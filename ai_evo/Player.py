@@ -1,5 +1,5 @@
 from copy import deepcopy
-import Direction
+from Direction import Direction
 
 #   Player {
 #       position : [x, y]
@@ -20,8 +20,8 @@ class Player(object):
     heuristic = None
     moves_made = []
 
-    def __init__(self, name, pos):
-        self.name = name
+    def __init__(self, pos):
+        #self.name = name
         self.position = pos[:]
         self.direction = Direction()
 
@@ -32,7 +32,7 @@ class Player(object):
     def apply_move(self, move, old_board):
         self.position[0] += move[0]
         self.position[1] += move[1]
-        new_board = deepcopy(old_board) #[:]
+        new_board = deepcopy(old_board)
         new_board[self.pos[0]][self.pos[1]] = self.color
         return new_board
 
