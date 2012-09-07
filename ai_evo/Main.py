@@ -12,7 +12,7 @@ class TronEvo(object):
     classdocs
     '''
 
-    def __init__(self,params):
+    def __init__(self):
         '''
         Constructor
         '''
@@ -29,15 +29,15 @@ class TronEvo(object):
     def test_game(self):
         p1 = Player()
         p1.name = 'p1'
-        p1.pos = [5,2]
+        p1.pos = [50, 25]
         p1.heuristic = Heuristic()
         p2 = Player()
         p2.name = 'p2'
-        p2.pos = [5,7]
+        p2.pos = [50, 75]
         p2.heuristic = Heuristic()
-        g = Game(p1, p2, 20)
-        g.initialize_board(10)
-        g.describe_board(g.board)
+        g = Game(p1, p2, 5)
+        g.initialize_board(100)
+        #g.describe_board(g.board)
         g.play()
         
     def run_statistics(self, tronEvo):

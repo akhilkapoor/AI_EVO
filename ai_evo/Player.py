@@ -48,7 +48,7 @@ class Player(object):
         self.direction = deepcopy(move)
         new_board = deepcopy(old_board)
         new_board[self.pos[0]][self.pos[1]] = 1
-        print self.name, 'moved', Direction().__str__(move), 'to', self.pos
+        #print self.name, 'moved', Direction().__str__(move), 'to', self.pos
 #        self.describe_move(best_move)
         return new_board
 
