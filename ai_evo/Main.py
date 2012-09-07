@@ -46,11 +46,11 @@ class TronEvo(object):
         stats = tronEvo.statistics
         ngen = tronEvo.ngenerations
         
-        for i in range(len(stats)): 
+        for i in range(1): 
             plt.figure(i)
             plt.plot(range(ngen), stats[i][0], label='Minimum Weight Value')
-            plt.plot(range(ngen), stats[i][0], label='Maximum Weight Value')
-            plt.plot(range(ngen), stats[i][0], label='Mean Weight Value')
+            plt.plot(range(ngen), stats[i][1], label='Maximum Weight Value')
+            plt.plot(range(ngen), stats[i][2], label='Mean Weight Value')
             plt.xlabel('Generation')
             plt.ylabel('Weight Value')
             plt.legend()
