@@ -25,27 +25,39 @@ class Player(object):
     moves_made = []
 
     def __init__(self):
-        self.direction = Direction()
+        name = None
+        self.direction = Direction().North
         #prev_pos = [0,0]
         
 
     def applicable_moves(self, board):
-        moves = direction.get_others()
+        opp_direction = Direction().opposite_direction(self.direction)
+        moves = Direction().get_others(opp_direction)
         return moves
     
     def apply_move(self, move, old_board):
-        posx = self.position[0] + move[0]
-        posy = self.position[1] + move[1]
+        posx = self.pos[0] + move[0]
+        posy = self.pos[1] + move[1]
         new_board = deepcopy(old_board)
         new_board[posx][posy] = 1
+        return new_board
+
+    def make_move(self, move, old_board):
+        self.pos[0] += move[0]
+        self.pos[1] += move[1]
+        self.direction = deepcopy(move)
+        new_board = deepcopy(old_board)
+        new_board[self.pos[0]][self.pos[1]] = 1
+        print self.name, 'moved', Direction().__str__(move), 'to', self.pos
+#        self.describe_move(best_move)
         return new_board
 
     def pick_move(self, board, op_pos):
         moves = self.applicable_moves(board)
         scores = []
         for m in moves:
-            new_board = apply_move(m, board)
-            score.append(self.heuristic.eval(board, new_board, self.pos, op_pos))
+            new_board = self.apply_move(m, board)
+            scores.append(self.heuristic.eval(board, new_board, self.pos, op_pos))
         best_move = moves[ scores.index( max(scores) ) ]
         return best_move
 
