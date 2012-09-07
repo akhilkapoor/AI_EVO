@@ -1,7 +1,5 @@
 '''
-Created on Sep 5, 2012
-
-@author: Michael Smith
+@author: Michael Smith, Akhil Kapoor
 '''
 from ai_evo.Evolution import Evolution
 

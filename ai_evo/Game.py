@@ -1,7 +1,5 @@
 '''
-Created on Sep 6, 2012
-
-@author: Mike
+@author: Michael Smith, Akhil Kapoor
 '''
 
 import random

@@ -1,11 +1,11 @@
 '''
-Created on Sep 5, 2012
-
-@author: Michael Smith
+@author: Michael Smith, Akhil Kapoor
 '''
 
 import random
 import Game
+from ai_evo import Player
+from ai_evo.Heuristic import Heuristic
 
 class Evolution(object):
     '''
@@ -39,6 +39,11 @@ class Evolution(object):
         pass
     
     def init_population(self):
+        while(len(self.population) < self.population_size):
+            p = Player()
+            p.heuristic = Heuristic()
+            p.heuristic.weights = [random.randint(-100,100) for i in range(4)]
+            self.population.append(p)
         pass
     
     def parent_selection(self):

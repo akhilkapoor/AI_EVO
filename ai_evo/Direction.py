@@ -1,8 +1,7 @@
 '''
-Created on Sep 6, 2012
-
-@author: Mike
+@author: Michael Smith, Akhil Kapoor
 '''
+
 from copy import deepcopy
 
 class Direction(object):
@@ -16,11 +15,12 @@ class Direction(object):
         '''
         Constructor
         '''
-        self.all = deepcopy(self.all)
+        pass
         
     def get_others(self, direction):
-        pass
-
+        others = deepcopy(self.all)
+        others.remove(direction)
+        return others
         
     def __str__(self, direction):
         if direction == self.North:
