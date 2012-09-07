@@ -6,6 +6,7 @@ from Game import Game
 from Player import Player
 from Heuristic import Heuristic
 from matplotlib import pyplot as plt
+from GlobalParams import *
 
 class TronEvo(object):
     '''
@@ -45,7 +46,7 @@ class TronEvo(object):
         stats = tronEvo.statistics
         ngen = tronEvo.ngenerations
         
-        for i in range(4):
+        for i in range(len(stats)): 
             plt.figure(i)
             plt.plot(range(ngen), stats[i][0], label='Minimum Weight Value')
             plt.plot(range(ngen), stats[i][0], label='Maximum Weight Value')

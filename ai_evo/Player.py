@@ -4,6 +4,7 @@
 
 from copy import deepcopy
 from Direction import Direction
+from GlobalParams import *
 
 #   Player {
 #       position : [x, y]
@@ -61,8 +62,9 @@ class Player(object):
             scores.append(self.heuristic.eval(board, new_board, newp, op_pos))
             
         best_move = moves[ scores.index( max(scores) ) ]
-        print 'Scores', scores
-        print 'Move', Direction().__str__(best_move)
+        if Global().DEBUG:
+            print 'Scores', scores
+            print 'Move', Direction().__str__(best_move)
         return best_move
 
     def describe_move(self, move):

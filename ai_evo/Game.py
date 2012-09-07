@@ -7,6 +7,7 @@ from copy import deepcopy
 from Player import Player
 from Heuristic import Heuristic
 from Direction import Direction
+from GlobalParams import *
 
 import pygame, sys
 from pygame.locals import *
@@ -128,26 +129,30 @@ class Game(object):
             if self.is_equal(old_board, self.board):
                 # trying to step on each other's head
 #                self.game = 3
-                print 'draw1'
+                if Global().DEBUG:
+                    print 'draw1'
                 self.do_something()
                 return None
             elif self.is_equal(temp1, temp2):
                 # trying to get to the same spot
 #                self.game = 3
-                print 'draw2'
+                if Global().DEBUG:
+                    print 'draw2'
                 self.do_something()
                 return None
             
             elif self.is_equal(temp1, old_board):
                 # only p1 crashed
 #                self.game = 2
-                print 'p1 crashed'
+                if Global().DEBUG:
+                    print 'p1 crashed'
                 self.do_something()
                 return self.p2
             elif self.is_equal(temp2, old_board):
                 # only p2 crashed
 #                self.game = 1
-                print 'p2 crashed'
+                if Global().DEBUG:
+                    print 'p2 crashed'
                 self.do_something()
                 return self.p1
             

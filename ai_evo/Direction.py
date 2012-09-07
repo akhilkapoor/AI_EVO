@@ -3,6 +3,7 @@
 '''
 
 from copy import deepcopy
+from GlobalParams import *
 
 class Direction(object):
     North = [-1,0]

@@ -7,24 +7,25 @@ from Game import Game
 from Player import Player
 from Heuristic import Heuristic
 from copy import deepcopy
+from GlobalParams import *
 
 class Evolution(object):
     '''
     classdocs
     '''
 
-    ngenerations = 20
-    population_size = 20
-    tournament_size = 5
+    ngenerations = 3
+    population_size = 10
+    tournament_size = 2
     population = []
     board_size = 20
     statistics = []
     
     # reproduction params
-    percent_maintain = 0.2    # number parents to keep
+    percent_maintain = 0.5    # number parents to keep
     
     # mutation params
-    percent_mutation = 0.1     # number children to mutate
+    percent_mutation = 0.2     # number children to mutate
     mutation_factor = 5        # max factor to mutate weights by 
 
     def __init__(self):
@@ -60,7 +61,7 @@ class Evolution(object):
             
             parents = self.parent_selection()
             children = self.reproduce(parents)
-            self.population = self.mutatate(children)
+            self.population = self.mutate(children)
             
         # set statistics to be analyzed later
         self.statistics.append([minCrashWeights, maxCrashWeights, meanCrashWeights])
@@ -104,8 +105,9 @@ class Evolution(object):
                         g = Game(player1, player2, self.board_size)
                         g.initialize_board()
                         
-                        print 'Player 1 weights: ', player1.heuristic.weights
-                        print 'Player 2 weights: ', player2.heuristic.weights
+                        if Global().DEBUG:
+                            print 'Player 1 weights: ', player1.heuristic.weights
+                            print 'Player 2 weights: ', player2.heuristic.weights
                         winner = g.play()
                         
                         # only increment counts if true winner (no draws)
@@ -127,7 +129,7 @@ class Evolution(object):
         
         n_to_maintain = self.percent_maintain * self.population_size
         
-        children = random.sample(parents, n_to_maintain)
+        children = random.sample(parents, int(n_to_maintain))
         
         # crossing over on two random parents' weights
         while(len(children) < self.population_size):
@@ -147,7 +149,7 @@ class Evolution(object):
     
     def mutate(self, children):
         
-        n_to_mutate = self.percent_mutation * self.population_size
+        n_to_mutate = int(self.percent_mutation * self.population_size)
         mutant_children = random.sample(children, n_to_mutate)
         
         for i in range(n_to_mutate):

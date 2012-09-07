@@ -4,6 +4,7 @@
 
 import random
 import math
+from GlobalParams import *
 
 class Heuristic(object):
     '''
