@@ -19,7 +19,7 @@ class Evolution(object):
     board_size = 400
     statistics = []
 
-    def __init__(self,params):
+    def __init__(self):
         '''
         Constructor
         '''
