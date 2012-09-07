@@ -57,8 +57,12 @@ class Player(object):
         scores = []
         for m in moves:
             new_board = self.apply_move(m, board)
-            scores.append(self.heuristic.eval(board, new_board, self.pos, op_pos))
+            newp = [self.pos[0]+m[0], self.pos[1]+m[1]]
+            scores.append(self.heuristic.eval(board, new_board, newp, op_pos))
+            
         best_move = moves[ scores.index( max(scores) ) ]
+        print 'Scores', scores
+        print 'Move', Direction().__str__(best_move)
         return best_move
 
     def describe_move(self, move):
