@@ -74,7 +74,7 @@ class Game(object):
             print
         print
         
-    def play(self):       
+    def play(self, DEBUG=DEBUG):       
         
         if self.display:
             pygame.init()
@@ -121,14 +121,14 @@ class Game(object):
                 # trying to step on each other's head
 #                self.game = 3
                 if DEBUG:
-                    print 'draw1'
+                    print 'Players crashed head-on'
                 self.pygame_event_handler()
                 return None
             elif self.is_equal(temp1, temp2):
                 # trying to get to the same spot
 #                self.game = 3
                 if DEBUG:
-                    print 'draw2'
+                    print 'Players crashed trying to reach the same spot'
                 self.pygame_event_handler()
                 return None
             
@@ -136,14 +136,14 @@ class Game(object):
                 # only p1 crashed
 #                self.game = 2
                 if DEBUG:
-                    print 'p1 crashed'
+                    print 'Player 1 crashed'
                 self.pygame_event_handler()
                 return self.p2
             elif self.is_equal(temp2, old_board):
                 # only p2 crashed
 #                self.game = 1
                 if DEBUG:
-                    print 'p2 crashed'
+                    print 'Player 2 crashed'
                 self.pygame_event_handler()
                 return self.p1
             

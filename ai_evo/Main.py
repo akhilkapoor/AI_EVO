@@ -65,7 +65,7 @@ class TronEvo(object):
         g.display = DISPLAY
         g.initialize_board()
         
-        g.play()
+        g.play(True)
         raw_input('Hit enter to exit..')
 
     def run_statistics(self, tronEvo):
