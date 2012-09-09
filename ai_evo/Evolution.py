@@ -38,27 +38,29 @@ class Evolution(object):
         maxDistanceWeights = []
         meanDistanceWeights = []
         
+        minRegionWeights = []
+        maxRegionWeights = []
+        meanRegionWeights = []
+        
         # run for several generations
         for i in range(NUM_GENERATIONS):
             
             print 'Generation', i
             
-            crashWeights = []    # not used yet
-            distanceWeights = []  # not used yet
+            crashWeights = []
+            distanceWeights = []
+            regionWeights = []
             
             for j in range(POP_SIZE):
                 weights = self.population[j].heuristic.weights
                 
                 crashWeights.append(weights[0])
                 distanceWeights.append(weights[1])
+                regionWeights.append(weights[2])
                 
-            minCrashWeights.append(min(crashWeights))
-            maxCrashWeights.append(max(crashWeights))
-            meanCrashWeights.append(sum(crashWeights)/float(POP_SIZE))
-              
-            minDistanceWeights.append(min(distanceWeights))
-            maxDistanceWeights.append(max(distanceWeights))
-            meanDistanceWeights.append(sum(distanceWeights)/float(POP_SIZE))
+            self.append_stats(minCrashWeights, maxCrashWeights, meanCrashWeights, crashWeights)
+            self.append_stats(minDistanceWeights, maxDistanceWeights, meanDistanceWeights, distanceWeights)
+            self.append_stats(minRegionWeights, maxRegionWeights, meanRegionWeights, regionWeights)
             
             parents = self.parent_selection()
             children = self.reproduce(parents)
@@ -67,14 +69,20 @@ class Evolution(object):
         # set statistics to be analyzed later
         self.statistics.append([minCrashWeights, maxCrashWeights, meanCrashWeights])
         self.statistics.append([minDistanceWeights, maxDistanceWeights, meanDistanceWeights])
+        self.statistics.append([minRegionWeights, maxRegionWeights, meanRegionWeights])
         
         self.last_pop = deepcopy(self.population)
+        
+    def append_stats(self, min_w, max_w, mean_w, weight_vals):
+        min_w.append(min(weight_vals))
+        max_w.append(max(weight_vals))
+        mean_w.append(sum(weight_vals)/float(POP_SIZE))
 
     def init_population(self):
         while(len(self.population) < POP_SIZE):
             p = Player()
             p.heuristic = Heuristic()
-            p.heuristic.weights = [random.randint(-100,100) for i in range(2)]
+            p.heuristic.weights = [random.randint(-100,100) for i in range(NUM_WEIGHTS)]
             self.population.append(p)
     
     def parent_selection(self):
