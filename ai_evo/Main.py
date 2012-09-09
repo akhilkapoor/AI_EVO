@@ -5,10 +5,10 @@ from Evolution import Evolution
 from Game import Game
 from Player import Player
 from Heuristic import Heuristic
-from matplotlib import pyplot as plt
 from GlobalParams import *
+
+from matplotlib import pyplot as plt
 import random
-from ai_evo import GlobalParams
 
 class TronEvo(object):
 
@@ -52,9 +52,8 @@ class TronEvo(object):
     def play_old_vs_new(self,tronEvo):
 
         # redefine some globals
-        GlobalParams.set_board_size(40)
-        GlobalParams.set_display(True)
-        GlobalParams.update_resize_factor()
+        globals()['BOARD_SIZE'] = 20
+        globals()['DISPLAY'] = True
             
         player1 = random.choice(tronEvo.last_pop)
         player2 = random.choice(tronEvo.last_pop)
@@ -62,9 +61,8 @@ class TronEvo(object):
         print 'Player 1 weights:', player1.heuristic.weights
         print 'Player 2 weights:', player2.heuristic.weights
 
-        g = Game(player1, player2, GlobalParams.BOARD_SIZE)
-        g.display = GlobalParams.DISPLAY
-        g.board_size = GlobalParams.BOARD_SIZE
+        g = Game(player1, player2, BOARD_SIZE)
+        g.display = DISPLAY
         g.initialize_board()
         
         g.play()
@@ -75,7 +73,7 @@ class TronEvo(object):
         stats = tronEvo.statistics
         generation_range = range(NUM_GENERATIONS)
         
-        weight_types = ['Crashing', 'Distance from Opponent']
+        weight_types = ['Crashing', 'Distance from Opponent', 'Region Difference']
         
         for i,stat in enumerate(stats):
             plt.figure()

@@ -7,7 +7,7 @@ from copy import deepcopy
 from Player import Player
 from Heuristic import Heuristic
 from Direction import Direction
-import GlobalParams
+from GlobalParams import *
 
 import pygame, sys
 from pygame.locals import *
@@ -20,8 +20,8 @@ class Game(object):
     prev_board = []
     game = 0
     
-    display = GlobalParams.DISPLAY
-    board_size = GlobalParams.BOARD_SIZE
+    display = DISPLAY
+    board_size = BOARD_SIZE
 
     def __init__(self, player1, player2, n):
         self.p1 = player1
@@ -36,8 +36,6 @@ class Game(object):
         self.p2.direction = Direction().West
 
     def initialize_board(self):
-        self.resize_factor = GlobalParams.WINDOW_SIZE / self.board_size
-
         self.board = []
         n = self.board_size
         for i in range(n):
@@ -81,17 +79,17 @@ class Game(object):
         if self.display:
             pygame.init()
 
-            F = self.resize_factor
+            F = WINDOW_SIZE/self.board_size
             
             fpsClock = pygame.time.Clock()
             
-            DISPLAYSURF = pygame.display.set_mode((self.board_size*F, self.board_size*F))
+            DISPLAYSURF = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
             pygame.display.set_caption('Tron!')
 
-            pygame.draw.line(DISPLAYSURF, GlobalParams.WHITE, (0, 0), (0, self.board_size*F), F)
-            pygame.draw.line(DISPLAYSURF, GlobalParams.WHITE, (0, 0), (self.board_size*F, 0), F)
-            pygame.draw.line(DISPLAYSURF, GlobalParams.WHITE, (0, self.board_size*F), (self.board_size*F, self.board_size*F), F)
-            pygame.draw.line(DISPLAYSURF, GlobalParams.WHITE, (self.board_size*F, 0), (self.board_size*F, self.board_size*F), F)
+            pygame.draw.line(DISPLAYSURF, WHITE, (0, 0), (0, WINDOW_SIZE), F)
+            pygame.draw.line(DISPLAYSURF, WHITE, (0, 0), (WINDOW_SIZE, 0), F)
+            pygame.draw.line(DISPLAYSURF, WHITE, (0, WINDOW_SIZE), (WINDOW_SIZE, WINDOW_SIZE), F)
+            pygame.draw.line(DISPLAYSURF, WHITE, (WINDOW_SIZE, 0), (WINDOW_SIZE, WINDOW_SIZE), F)
             
             pygame.event.pump()
 
@@ -111,25 +109,25 @@ class Game(object):
             self.board = self.p2.make_move(move2, self.board)
             
             if self.display:
-                pygame.draw.line(DISPLAYSURF, GlobalParams.L_GREEN, (self.p1.prev_pos[1]*F, self.p1.prev_pos[0]*F), (self.p1.pos[1]*F, self.p1.pos[0]*F), F)
-                pygame.draw.line(DISPLAYSURF, GlobalParams.PURPLE, (self.p2.prev_pos[1]*F, self.p2.prev_pos[0]*F), (self.p2.pos[1]*F, self.p2.pos[0]*F), F)
+                pygame.draw.line(DISPLAYSURF, L_GREEN, (self.p1.prev_pos[1]*F, self.p1.prev_pos[0]*F), (self.p1.pos[1]*F, self.p1.pos[0]*F), F)
+                pygame.draw.line(DISPLAYSURF, PURPLE, (self.p2.prev_pos[1]*F, self.p2.prev_pos[0]*F), (self.p2.pos[1]*F, self.p2.pos[0]*F), F)
                 pygame.display.update()
                 self.pygame_event_handler()
-                fpsClock.tick(GlobalParams.FPS)
+                fpsClock.tick(FPS)
         
             #self.describe_board(self.board)
 
             if self.is_equal(old_board, self.board):
                 # trying to step on each other's head
 #                self.game = 3
-                if GlobalParams.DEBUG:
+                if DEBUG:
                     print 'draw1'
                 self.pygame_event_handler()
                 return None
             elif self.is_equal(temp1, temp2):
                 # trying to get to the same spot
 #                self.game = 3
-                if GlobalParams.DEBUG:
+                if DEBUG:
                     print 'draw2'
                 self.pygame_event_handler()
                 return None
@@ -137,14 +135,14 @@ class Game(object):
             elif self.is_equal(temp1, old_board):
                 # only p1 crashed
 #                self.game = 2
-                if GlobalParams.DEBUG:
+                if DEBUG:
                     print 'p1 crashed'
                 self.pygame_event_handler()
                 return self.p2
             elif self.is_equal(temp2, old_board):
                 # only p2 crashed
 #                self.game = 1
-                if GlobalParams.DEBUG:
+                if DEBUG:
                     print 'p2 crashed'
                 self.pygame_event_handler()
                 return self.p1

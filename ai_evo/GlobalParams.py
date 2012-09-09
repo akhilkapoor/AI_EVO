@@ -2,16 +2,20 @@
 @author: Akhil Kapoor, Michael Smith
 '''
 
+# to change values at run-time use:
+#    globals()['VAR_NAME'] = VALUE
+
 DEBUG = False
 
 # Evolutionary Params
-NUM_GENERATIONS = 5
-POP_SIZE = 30
-TOURN_SIZE = 5
+NUM_GENERATIONS = 10
+POP_SIZE = 12
+TOURN_SIZE = 3
+NUM_WEIGHTS = 3         # number of weights to initialize with
 PERCENT_MAINTAIN = 0.2  # number parents to keep
 PERCENT_MUTATION = 0.2  # number children to mutate
 MUTATION_FACT = 50      # max factor to mutate weights by
-BOARD_SIZE = 12
+BOARD_SIZE = 6
 
 # Game Params
 DISPLAY = False
@@ -25,15 +29,3 @@ L_GREEN = (  0, 220,   0)
 N_BLUE  = (  0,   0, 128)
 PURPLE  = (200,   0, 200)
 RED     = (255,   0,   0)
-
-def set_display(display):
-    global DISPLAY
-    DISPLAY = display
-    
-def update_resize_factor():
-    global RESIZE_FACTOR
-    RESIZE_FACTOR = WINDOW_SIZE/BOARD_SIZE
-    
-def set_board_size(size):
-    global BOARD_SIZE
-    BOARD_SIZE = size
