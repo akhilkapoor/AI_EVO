@@ -3,6 +3,7 @@
 '''
 
 import random
+import numpy as np
 from Game import Game
 from Player import Player
 from Heuristic import Heuristic
@@ -10,23 +11,11 @@ from copy import deepcopy
 from GlobalParams import *
 
 class Evolution(object):
-    '''
-    classdocs
-    '''
-
-    ngenerations = 50
-    population_size = 20
-    tournament_size = 3
+    
+    first_pop = []
+    last_pop = []
     population = []
-    board_size = 20
     statistics = []
-    
-    # reproduction params
-    percent_maintain = 0.5    # number parents to keep
-    
-    # mutation params
-    percent_mutation = 0.2     # number children to mutate
-    mutation_factor = 5        # max factor to mutate weights by 
 
     def __init__(self):
         '''
@@ -39,58 +28,68 @@ class Evolution(object):
         # initialize population
         self.init_population()
         
+        self.first_pop = deepcopy(self.population)
+        
         minCrashWeights = []        
         maxCrashWeights = []
         meanCrashWeights = [] 
         
+        minDistanceWeights = []
+        maxDistanceWeights = []
+        meanDistanceWeights = []
+        
         # run for several generations
-        for i in range(self.ngenerations):
+        for i in range(NUM_GENERATIONS):
+            
+            print 'Generation', i
             
             crashWeights = []    # not used yet
-            regionWeights = []  # not used yet
+            distanceWeights = []  # not used yet
             
-            for j in range(self.population_size):
+            for j in range(POP_SIZE):
                 weights = self.population[j].heuristic.weights
                 
                 crashWeights.append(weights[0])
-                regionWeights.append(weights[1])    # not used yet
+                distanceWeights.append(weights[1])
                 
             minCrashWeights.append(min(crashWeights))
             maxCrashWeights.append(max(crashWeights))
-            meanCrashWeights.append(sum(crashWeights)/float(self.population_size))            
+            meanCrashWeights.append(sum(crashWeights)/float(POP_SIZE))
+              
+            minDistanceWeights.append(min(distanceWeights))
+            maxDistanceWeights.append(max(distanceWeights))
+            meanDistanceWeights.append(sum(distanceWeights)/float(POP_SIZE))
             
             parents = self.parent_selection()
             children = self.reproduce(parents)
             self.population = self.mutate(children)
             
-            # set statistics to be analyzed later
-            self.statistics.append([minCrashWeights, maxCrashWeights, meanCrashWeights])
+        # set statistics to be analyzed later
+        self.statistics.append([minCrashWeights, maxCrashWeights, meanCrashWeights])
+        self.statistics.append([minDistanceWeights, maxDistanceWeights, meanDistanceWeights])
+        
+        self.last_pop = deepcopy(self.population)
 
     def init_population(self):
-        while(len(self.population) < self.population_size):
+        while(len(self.population) < POP_SIZE):
             p = Player()
             p.heuristic = Heuristic()
-            p.heuristic.weights = [random.randint(-100,100) for i in range(4)]
+            p.heuristic.weights = [random.randint(-100,100) for i in range(2)]
             self.population.append(p)
     
     def parent_selection(self):
         # only 'most fit' players are selected for reproduction
         parents = []
-        pop_range = range(self.population_size)
-        tourn_range = range(self.tournament_size)
+        pop_range = range(POP_SIZE)
+        tourn_range = range(TOURN_SIZE)
         
         # selecting next population
-        while(len(parents) < self.population_size):
+        while(len(parents) < POP_SIZE):
             
-            competitors = []
-            
-            # pick players for tournament
-            while(len(competitors) < self.tournament_size):
-                p = random.choice(self.population)
-                if p not in competitors:
-                    competitors.append(p)
-                    
-            win_counts = [(0) for q in pop_range]   # list of all 0s
+            # take random sample of players for tournament
+            competitors = random.sample(self.population, TOURN_SIZE) 
+                               
+            win_counts =  np.array([0]*TOURN_SIZE)  # list of all 0s
             
             # have each player play other players once
             for p1 in tourn_range:
@@ -102,37 +101,37 @@ class Evolution(object):
                     # verify AI doesn't play itself
                     if player1 != player2:
                         # player j plays player k
-                        g = Game(player1, player2, self.board_size)
+                        g = Game(player1, player2, BOARD_SIZE)
                         g.initialize_board()
                         
-                        if Global().DEBUG:
+                        if DEBUG:
                             print 'Player 1 weights: ', player1.heuristic.weights
                             print 'Player 2 weights: ', player2.heuristic.weights
                         winner = g.play()
                         
                         # only increment counts if true winner (no draws)
                         if player1 == winner:
-                            win_counts[p1] = win_counts[p1] + 1
+                            win_counts[p1] += 1
                         elif player2 == winner:
-                            win_counts[p2] = win_counts[p2] + 1
+                            win_counts[p2] += 1
             
-            # append best Player to 'parents'
-            best_player_index = win_counts.index(max(win_counts))
-            best_player = competitors[best_player_index]
+            # find all 'best players'
+            best_player_indices = np.where(win_counts == (max(win_counts)))[0]
+        
+            # if more than one 'best player' is found, choose randomly
+            best_player = competitors[random.choice(best_player_indices)]
             parents.append(best_player)
         
         return parents
     
     
-    def reproduce(self, parents):
-        children = []
-        
-        n_to_maintain = self.percent_maintain * self.population_size
+    def reproduce(self, parents):        
+        n_to_maintain = PERCENT_MAINTAIN * POP_SIZE
         
         children = random.sample(parents, int(n_to_maintain))
         
         # crossing over on two random parents' weights
-        while(len(children) < self.population_size):
+        while(len(children) < POP_SIZE):
             
             par1 = random.choice(parents)
             par2 = random.choice(parents)
@@ -149,12 +148,11 @@ class Evolution(object):
     
     def mutate(self, children):
         
-        n_to_mutate = int(self.percent_mutation * self.population_size)
+        n_to_mutate = int(PERCENT_MUTATION * POP_SIZE)
         mutant_children = random.sample(children, n_to_mutate)
         
         for i in range(n_to_mutate):
             for weight in mutant_children[i].heuristic.weights:
-                weight *= random.random() * self.mutation_factor
+                weight *= random.randrange(-MUTATION_FACT,MUTATION_FACT)
         
         return children
-    

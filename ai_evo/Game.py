@@ -7,51 +7,39 @@ from copy import deepcopy
 from Player import Player
 from Heuristic import Heuristic
 from Direction import Direction
-from GlobalParams import *
+import GlobalParams
 
 import pygame, sys
 from pygame.locals import *
-
-WHITE   = (255, 255, 255)
-FPS = 30 # frames per second setting
-L_GREEN = (  0, 220,   0)
-N_BLUE  = (  0,   0, 128)
-PURPLE  = (200,   0, 200)
-RED     = (255,   0,   0)
-RESIZE_FACTOR = 20
 
 class Game(object):
 
     p1 = None
     p2 = None
-    size = 0
     board = []
     prev_board = []
     game = 0
-    D = 0
-    display = False
     
+    display = GlobalParams.DISPLAY
+    board_size = GlobalParams.BOARD_SIZE
 
     def __init__(self, player1, player2, n):
         self.p1 = player1
         self.p2 = player2
         
-        self.size = n
+        self.board_size = n
         
-        self.p1.pos = [self.size/2,self.size/4]
-        self.p2.pos = [self.size/2,3*self.size/4]
+        self.p1.pos = [self.board_size/2,self.board_size/4]
+        self.p2.pos = [self.board_size/2,3*self.board_size/4]
         
         self.p1.direction = Direction().East
         self.p2.direction = Direction().West
-        
-#        self.display = True
-                
-        self.D = RESIZE_FACTOR
 
     def initialize_board(self):
-        
+        self.resize_factor = GlobalParams.WINDOW_SIZE / self.board_size
+
         self.board = []
-        n = self.size
+        n = self.board_size
         for i in range(n):
             self.board.append([0]*n)
         for i in range(n):
@@ -74,34 +62,38 @@ class Game(object):
     def describe_board(self, board):
         print
         print '   ',
-        for i in range(self.size):
+        for i in range(self.board_size):
             print i,
         print
         print '- -',
-        for i in range(self.size):
+        for i in range(self.board_size):
             print '-',
         print
-        for i in range(self.size):
+        for i in range(self.board_size):
             print i, '|', 
-            for j in range(self.size):
+            for j in range(self.board_size):
                 print board[i][j],
             print
         print
         
-    def play(self):
+    def play(self):       
         
         if self.display:
             pygame.init()
+
+            F = self.resize_factor
+            
             fpsClock = pygame.time.Clock()
-            DISPLAYSURF = pygame.display.set_mode((self.size*self.D, self.size*self.D))
+            
+            DISPLAYSURF = pygame.display.set_mode((self.board_size*F, self.board_size*F))
             pygame.display.set_caption('Tron!')
 
-            D = self.D
-
-            pygame.draw.line(DISPLAYSURF, WHITE, (0, 0), (0, self.size*D), D)
-            pygame.draw.line(DISPLAYSURF, WHITE, (0, 0), (self.size*D, 0), D)
-            pygame.draw.line(DISPLAYSURF, WHITE, (0, self.size*D), (self.size*D, self.size*D), D)
-            pygame.draw.line(DISPLAYSURF, WHITE, (self.size*D, 0), (self.size*D, self.size*D), D)
+            pygame.draw.line(DISPLAYSURF, GlobalParams.WHITE, (0, 0), (0, self.board_size*F), F)
+            pygame.draw.line(DISPLAYSURF, GlobalParams.WHITE, (0, 0), (self.board_size*F, 0), F)
+            pygame.draw.line(DISPLAYSURF, GlobalParams.WHITE, (0, self.board_size*F), (self.board_size*F, self.board_size*F), F)
+            pygame.draw.line(DISPLAYSURF, GlobalParams.WHITE, (self.board_size*F, 0), (self.board_size*F, self.board_size*F), F)
+            
+            pygame.event.pump()
 
         while (not self.game):
 
@@ -119,41 +111,42 @@ class Game(object):
             self.board = self.p2.make_move(move2, self.board)
             
             if self.display:
-                pygame.draw.line(DISPLAYSURF, L_GREEN, (self.p1.prev_pos[1]*D, self.p1.prev_pos[0]*D), (self.p1.pos[1]*D, self.p1.pos[0]*D), D)
-                pygame.draw.line(DISPLAYSURF, PURPLE, (self.p2.prev_pos[1]*D, self.p2.prev_pos[0]*D), (self.p2.pos[1]*D, self.p2.pos[0]*D), D)
+                pygame.draw.line(DISPLAYSURF, GlobalParams.L_GREEN, (self.p1.prev_pos[1]*F, self.p1.prev_pos[0]*F), (self.p1.pos[1]*F, self.p1.pos[0]*F), F)
+                pygame.draw.line(DISPLAYSURF, GlobalParams.PURPLE, (self.p2.prev_pos[1]*F, self.p2.prev_pos[0]*F), (self.p2.pos[1]*F, self.p2.pos[0]*F), F)
                 pygame.display.update()
-                fpsClock.tick(FPS)
+                self.pygame_event_handler()
+                fpsClock.tick(GlobalParams.FPS)
         
             #self.describe_board(self.board)
 
             if self.is_equal(old_board, self.board):
                 # trying to step on each other's head
 #                self.game = 3
-                if Global().DEBUG:
+                if GlobalParams.DEBUG:
                     print 'draw1'
-                self.do_something()
+                self.pygame_event_handler()
                 return None
             elif self.is_equal(temp1, temp2):
                 # trying to get to the same spot
 #                self.game = 3
-                if Global().DEBUG:
+                if GlobalParams.DEBUG:
                     print 'draw2'
-                self.do_something()
+                self.pygame_event_handler()
                 return None
             
             elif self.is_equal(temp1, old_board):
                 # only p1 crashed
 #                self.game = 2
-                if Global().DEBUG:
+                if GlobalParams.DEBUG:
                     print 'p1 crashed'
-                self.do_something()
+                self.pygame_event_handler()
                 return self.p2
             elif self.is_equal(temp2, old_board):
                 # only p2 crashed
 #                self.game = 1
-                if Global().DEBUG:
+                if GlobalParams.DEBUG:
                     print 'p2 crashed'
-                self.do_something()
+                self.pygame_event_handler()
                 return self.p1
             
             #self.describe_board(self.board)
@@ -161,27 +154,23 @@ class Game(object):
             #c += 1
             #if c % 2 == 0:
             
-        # just staying here but never executes.
+        print 'uh oh, not supposed to get here'
         return random.choice([self.player1, self.player2, None])
     
 
-    def do_something(self):
-    
+    def pygame_event_handler(self):
+     
         if self.display:
-            fpsClock = pygame.time.Clock()
-            FPS = 120 # frames per second setting
-            condition = True
-        
-            while condition:
-                for event in pygame.event.get():
-                    if event.type == KEYUP:
-                        if event.key == K_SPACE:
-                            condition = False
-                            break
-                            #pygame.quit()
-                        elif event.key == K_ESCAPE:
-                            sys.exit()
-                    pygame.display.update()
-                    fpsClock.tick(FPS)
-                pygame.display.update()
-                fpsClock.tick(FPS)
+            pygame.event.pump()
+    
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == KEYUP:
+                    if event.key == K_SPACE:
+    #                    pygame.quit()
+                        pass
+                    elif event.key == K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()

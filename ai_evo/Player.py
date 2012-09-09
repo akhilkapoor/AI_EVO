@@ -5,6 +5,8 @@
 from copy import deepcopy
 from Direction import Direction
 from GlobalParams import *
+import random
+import numpy as np
 
 #   Player {
 #       position : [x, y]
@@ -20,16 +22,13 @@ class Player(object):
     name = None
     pos = [0, 0]
     direction = None
-    color = 'B'
     prev_pos = []
     heuristic = None
     moves_made = []
 
     def __init__(self):
-        name = None
         self.direction = Direction().North
         #prev_pos = [0,0]
-        
 
     def applicable_moves(self, board):
         opp_direction = Direction().opposite_direction(self.direction)
@@ -55,14 +54,20 @@ class Player(object):
 
     def pick_move(self, board, op_pos):
         moves = self.applicable_moves(board)
-        scores = []
-        for m in moves:
+        scores = np.array([0]*len(moves))    # every move can have a score
+        
+        for ind,m in enumerate(moves):
             new_board = self.apply_move(m, board)
             newp = [self.pos[0]+m[0], self.pos[1]+m[1]]
-            scores.append(self.heuristic.eval(board, new_board, newp, op_pos))
-            
-        best_move = moves[ scores.index( max(scores) ) ]
-        if Global().DEBUG:
+            scores[ind] = self.heuristic.eval(board, new_board, newp, op_pos)
+        
+        # find all 'best moves'
+        best_move_indices = np.where(scores == (max(scores)))[0]
+        
+        # if more than one 'best move' is found, choose randomly
+        best_move = moves[random.choice(best_move_indices)]
+        
+        if DEBUG:
             print 'Scores', scores
             print 'Move', Direction().__str__(best_move)
         return best_move

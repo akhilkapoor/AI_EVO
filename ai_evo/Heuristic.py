@@ -7,9 +7,6 @@ import math
 from GlobalParams import *
 
 class Heuristic(object):
-    '''
-    classdocs
-    '''
     weights = []
 
     def __init__(self):

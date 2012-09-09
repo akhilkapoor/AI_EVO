@@ -7,11 +7,10 @@ from Player import Player
 from Heuristic import Heuristic
 from matplotlib import pyplot as plt
 from GlobalParams import *
+import random
+from ai_evo import GlobalParams
 
 class TronEvo(object):
-    '''
-    classdocs
-    '''
 
     def __init__(self):
         '''
@@ -20,7 +19,8 @@ class TronEvo(object):
         
     def run(self):
         tronEvo = self.run_evolution()
-        self.run_statistics(tronEvo)
+        self.run_statistics(tronEvo)        
+        self.play_old_vs_new(tronEvo)
 
     def run_evolution(self):
         tronEvo = Evolution()
@@ -30,32 +30,67 @@ class TronEvo(object):
     def test_game(self):
         p1 = Player()
         p1.name = 'p1'
-        p1.pos = [50, 25]
+        p1.pos = [BOARD_SIZE/2,BOARD_SIZE/4]
         p1.heuristic = Heuristic()
+        p1.heuristic.weights.append(1000)
+        p1.heuristic.weights.append(20)
+        
         p2 = Player()
         p2.name = 'p2'
-        p2.pos = [50, 75]
+        p2.pos = [BOARD_SIZE/2,3*BOARD_SIZE/4]
         p2.heuristic = Heuristic()
-        g = Game(p1, p2, 5)
-        g.initialize_board(100)
+        p2.heuristic.weights.append(-20)
+        p2.heuristic.weights.append(20)
+        g = Game(p1, p2, BOARD_SIZE)
+        g.display = True
+        g.initialize_board()
+        
         #g.describe_board(g.board)
+        
         g.play()
         
+    def play_old_vs_new(self,tronEvo):
+
+        # redefine some globals
+        GlobalParams.set_board_size(40)
+        GlobalParams.set_display(True)
+        GlobalParams.update_resize_factor()
+            
+        player1 = random.choice(tronEvo.last_pop)
+        player2 = random.choice(tronEvo.last_pop)
+        
+        print 'Player 1 weights:', player1.heuristic.weights
+        print 'Player 2 weights:', player2.heuristic.weights
+
+        g = Game(player1, player2, GlobalParams.BOARD_SIZE)
+        g.display = GlobalParams.DISPLAY
+        g.board_size = GlobalParams.BOARD_SIZE
+        g.initialize_board()
+        
+        g.play()
+        raw_input('Hit enter to exit..')
+
     def run_statistics(self, tronEvo):
         
         stats = tronEvo.statistics
-        ngen = tronEvo.ngenerations
+        generation_range = range(NUM_GENERATIONS)
         
-        for i in range(1): 
-            plt.figure(i)
-            plt.plot(range(ngen), stats[i][0], label='Minimum Weight Value')
-            plt.plot(range(ngen), stats[i][1], label='Maximum Weight Value')
-            plt.plot(range(ngen), stats[i][2], label='Mean Weight Value')
+        weight_types = ['Crashing', 'Distance from Opponent']
+        
+        for i,stat in enumerate(stats):
+            plt.figure()
+            plt.plot(generation_range, stat[0], label='Min')
+            plt.plot(generation_range, stat[1], label='Max')
+            plt.plot(generation_range, stat[2], label='Mean')
             plt.xlabel('Generation')
             plt.ylabel('Weight Value')
             plt.legend()
-            plt.title('Final weight value of ' + str(stats[i][-1]))
+            plt.title('Weight evolution for ' + weight_types[i] + ' over time')
+            plt.draw()
+        
+        if len(stats) > 0:
             plt.show()
-
-tron = TronEvo()
+    
+tron = TronEvo() 
 tron.run()
+#tron.test_game()
