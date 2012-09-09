@@ -17,6 +17,9 @@ class Direction(object):
         Constructor
         '''
         pass
+    
+    def get_new_coord(self, old_coord, direction):
+        return [old_coord[0] + direction[0], old_coord[1] + direction[1]]
         
     def get_others(self, direction):
         others = deepcopy(self.all)
