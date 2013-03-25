@@ -8,18 +8,18 @@
 DEBUG = False
 
 # Evolutionary Params
-NUM_GENERATIONS = 10
-POP_SIZE = 12
+NUM_GENERATIONS = 4
+POP_SIZE = 14
 TOURN_SIZE = 3
 NUM_WEIGHTS = 3         # number of weights to initialize with
-PERCENT_MAINTAIN = 0.2  # number parents to keep
-PERCENT_MUTATION = 0.2  # number children to mutate
+PERCENT_MAINTAIN = 1  # number parents to keep
+PERCENT_MUTATION = 0  # number children to mutate
 MUTATION_FACT = 50      # max factor to mutate weights by
-BOARD_SIZE = 6
+BOARD_SIZE = 12
 
 # Game Params
-DISPLAY = False
-FPS = 10    # frames per second setting, probably limited to about 25
+DISPLAY = True
+FPS = 20    # frames per second setting, probably limited to about 25
 WINDOW_SIZE = 600
 RESIZE_FACTOR = WINDOW_SIZE/BOARD_SIZE
 

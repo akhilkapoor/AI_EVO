@@ -34,12 +34,14 @@ class TronEvo(object):
         p1.heuristic = Heuristic()
         p1.heuristic.weights.append(1000)
         p1.heuristic.weights.append(20)
+        p1.heuristic.weights.append(20)
         
         p2 = Player()
         p2.name = 'p2'
         p2.pos = [BOARD_SIZE/2,3*BOARD_SIZE/4]
         p2.heuristic = Heuristic()
         p2.heuristic.weights.append(-20)
+        p2.heuristic.weights.append(20)
         p2.heuristic.weights.append(20)
         g = Game(p1, p2, BOARD_SIZE)
         g.display = True
@@ -52,7 +54,7 @@ class TronEvo(object):
     def play_old_vs_new(self,tronEvo):
 
         # redefine some globals
-        globals()['BOARD_SIZE'] = 20
+        globals()['BOARD_SIZE'] = 60
         globals()['DISPLAY'] = True
             
         player1 = random.choice(tronEvo.last_pop)

@@ -160,7 +160,10 @@ class Evolution(object):
         mutant_children = random.sample(children, n_to_mutate)
         
         for i in range(n_to_mutate):
-            for weight in mutant_children[i].heuristic.weights:
-                weight *= random.randrange(-MUTATION_FACT,MUTATION_FACT)
+            mutant_children[i].heuristic.weights = []
+            while(len(mutant_children[i].heuristic.weights) < NUM_WEIGHTS):
+                mutant_children[i].heuristic.weights.append(random.randint(-100,100))
+#            for weight in mutant_children[i].heuristic.weights:
+#                weight *= random.randrange(-MUTATION_FACT,MUTATION_FACT)
         
         return children
